@@ -195,6 +195,9 @@ type Request struct {
 	FileName tspath.RootedFilePath
 	// Content is the content-mapped source file's text.
 	Content string
+	// Tag is set when Content is one tagged template literal in FileName, rather than the whole file.
+	// Spike for https://github.com/microsoft/TypeScript/issues/65313.
+	Tag string
 }
 
 // ProjectSpec describes the project configuration visible to its content mappers.

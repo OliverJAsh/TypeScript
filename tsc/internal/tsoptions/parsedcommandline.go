@@ -462,6 +462,23 @@ func (p *ParsedCommandLine) GetContentMapperForFileName(fileName tspath.RootedFi
 	return nil
 }
 
+// TagMappers returns the configured content mappers by the template literal tags they map.
+// Spike for https://github.com/microsoft/TypeScript/issues/65313.
+func (p *ParsedCommandLine) TagMappers() map[string]*contentmapper.Mapper {
+	var result map[string]*contentmapper.Mapper
+	for _, mapper := range p.ContentMappers() {
+		for _, tag := range mapper.Definition.Tags {
+			if result == nil {
+				result = make(map[string]*contentmapper.Mapper)
+			}
+			if _, exists := result[tag]; !exists {
+				result[tag] = mapper
+			}
+		}
+	}
+	return result
+}
+
 func (p *ParsedCommandLine) ResolvedProjectReferencePaths() []tspath.RootedFilePath {
 	p.resolvedProjectReferencePathsOnce.Do(func() {
 		p.resolvedProjectReferencePaths = core.Map(p.ParsedConfig.ProjectReferences, core.ResolveProjectReferencePath)

@@ -151,13 +151,22 @@ func parseContentMapper(value any) (*contentmapper.Mapper, []*ast.Diagnostic) {
 	} else {
 		errors = append(errors, ast.NewCompilerDiagnostic(diagnostics.Compiler_option_0_requires_a_value_of_type_1, "contentMapper.package", "string"))
 	}
+	tags, hasTags := v.Get("tags")
+	if hasTags {
+		if strs, isStringArray := parseStringArrayStrict(tags); isStringArray {
+			mapper.Definition.Tags = strs
+		} else {
+			errors = append(errors, ast.NewCompilerDiagnostic(diagnostics.Compiler_option_0_requires_a_value_of_type_1, "contentMapper.tags", "string[]"))
+		}
+	}
 	if extensions, ok := v.Get("extensions"); ok {
 		if strs, isStringArray := parseStringArrayStrict(extensions); isStringArray {
 			mapper.Definition.Extensions = strs
 		} else {
 			errors = append(errors, ast.NewCompilerDiagnostic(diagnostics.Compiler_option_0_requires_a_value_of_type_1, "contentMapper.extensions", "string[]"))
 		}
-	} else {
+	} else if !hasTags {
+		// Spike: a mapper that maps tagged templates does not need extensions.
 		errors = append(errors, ast.NewCompilerDiagnostic(diagnostics.Compiler_option_0_requires_a_value_of_type_1, "contentMapper.extensions", "string[]"))
 	}
 	if outputExtensions, ok := v.Get("outputExtensions"); ok && outputExtensions != nil {

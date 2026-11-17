@@ -188,6 +188,13 @@ func (e *emitter) emitJSFile(emitResolver printer.EmitResolver, sourceFile *ast.
 	emitContext := emitResolver.EmitContext()
 	options := e.host.Options()
 
+	// Spike: a file with mapped tagged templates is in the program as its virtual text, which contains the
+	// mappers' expressions. These expressions are for type checking only, so JavaScript emitted from this text
+	// would be incorrect. Emit from the original text needs more changes, so the spike does not emit JavaScript
+	// for these files.
+	if sourceFile != nil && sourceFile.ContentMapper() != "" {
+		return
+	}
 	if sourceFile == nil || e.emitOnly != EmitAll && e.emitOnly != EmitOnlyJs || jsFilePath == "" {
 		return
 	}

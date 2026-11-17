@@ -32,7 +32,7 @@ func TestParsedOptionsEquality(t *testing.T) {
 				{Path: "/project", OriginalPath: "../project", Circular: true}, nil,
 			},
 			ContentMappers: []*contentmapper.Mapper{{
-				Package: "mapper", Extensions: []string{".vue"}, Options: []byte(`{"setting":true}`),
+				Package: "mapper", Extensions: []string{".vue"}, Tags: []string{"html"}, Options: []byte(`{"setting":true}`),
 				Name: "mapper", Version: "1", Exec: []string{"node", "mapper.js"}, CompilerOptions: []string{"target"}, DynamicConfig: true,
 				PackageDirectory: "/node_modules/mapper", ContributionID: "extension",
 			}, nil},

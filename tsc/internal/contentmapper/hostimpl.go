@@ -105,6 +105,8 @@ type TransformParams struct {
 	Content string `json:"content"`
 	// ProjectHandle identifies the mapper project configuration opened for this transform.
 	ProjectHandle string `json:"projectHandle"`
+	// Tag is set when Content is one tagged template literal, and names its tag.
+	Tag string `json:"tag,omitzero"`
 }
 
 // MappedOutput is virtual source text and its mapping to an original input.
@@ -783,6 +785,7 @@ func (h *host) transformLocked(mapper *Mapper, request Request, projectHandle st
 		FileName:      request.FileName.AsString(),
 		Content:       request.Content,
 		ProjectHandle: projectHandle,
+		Tag:           request.Tag,
 	})
 	mapperTiming.finishRequest(&mapperTiming.transform, start)
 	if err != nil {

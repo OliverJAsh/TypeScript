@@ -423,7 +423,7 @@ func (p *fileLoader) parseSourceFile(t *parseTask) *ast.SourceFile {
 	if t.normalizedFilePath.ExtensionIsOneOf(p.contentMapperExtensions) {
 		return p.parseContentMappedFile(parseOptions)
 	}
-	return p.host.GetSourceFile(parseOptions)
+	return p.applyTagMappers(p.host.GetSourceFile(parseOptions), parseOptions)
 }
 
 // parseContentMappedFile produces a content-mapped virtual source file via the host's content

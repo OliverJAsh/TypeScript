@@ -33,6 +33,9 @@ var ErrProjectUnavailable = errors.New("content mapper project is unavailable")
 type Definition struct {
 	Package    string   `json:"package"`
 	Extensions []string `json:"extensions"`
+	// Tags are the template literal tags (for example "hsl" in hsl`...`) whose templates this mapper maps.
+	// Spike for https://github.com/microsoft/TypeScript/issues/65313.
+	Tags []string `json:"tags,omitzero"`
 	// OutputExtensions contains the resolved mapping after applying manifest defaults and project overrides.
 	OutputExtensions map[string]string `json:"outputExtensions,omitzero"`
 	Options          json.Value        `json:"options,omitempty"`
@@ -128,6 +131,8 @@ func (m *Mapper) Equals(other *Mapper) bool {
 	return m.Package == other.Package &&
 		(m.Extensions == nil) == (other.Extensions == nil) &&
 		slices.Equal(m.Extensions, other.Extensions) &&
+		(m.Tags == nil) == (other.Tags == nil) &&
+		slices.Equal(m.Tags, other.Tags) &&
 		(m.Definition.OutputExtensions == nil) == (other.Definition.OutputExtensions == nil) &&
 		maps.Equal(m.Definition.OutputExtensions, other.Definition.OutputExtensions) &&
 		(m.Options == nil) == (other.Options == nil) &&
