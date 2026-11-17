@@ -1455,11 +1455,7 @@ func TestContentMappersValidation(t *testing.T) {
 			contentMappers: `[{ "package": "x", "extensions": [".vue"], "outputExtensions": {".vue": ".js\\foo"} }]`,
 			expectedCode:   diagnostics.Content_mapper_extension_0_must_not_contain_path_separators.Code(),
 		},
-		{
-			name:           "built-in extension",
-			contentMappers: `[{ "package": "x", "extensions": [".ts"] }]`,
-			expectedCode:   diagnostics.Content_mapper_file_extension_0_is_a_built_in_extension_and_cannot_be_registered_by_a_content_mapper.Code(),
-		},
+		// Spike for #65313: built-in extensions are allowed.
 		{
 			name:           "missing extensions",
 			contentMappers: `[{ "package": "x" }]`,
@@ -1550,6 +1546,7 @@ func TestContentMappersValidation(t *testing.T) {
 }
 
 func TestContentMapperExtensionValidationUsesHostCaseSensitivity(t *testing.T) {
+	t.Skip("spike for #65313: built-in extensions are allowed")
 	t.Parallel()
 
 	tests := []struct {
@@ -1615,6 +1612,7 @@ func TestContentMapperExtensionValidationUsesHostCaseSensitivity(t *testing.T) {
 }
 
 func TestContentMapperCompoundExtensionValidation(t *testing.T) {
+	t.Skip("spike for #65313: built-in extensions are allowed")
 	t.Parallel()
 	for _, caseSensitivity := range []tspath.CaseSensitivity{tspath.CaseInsensitive, tspath.CaseSensitive} {
 		extensions := []string{".y.z", ".component.tsx.vue"}

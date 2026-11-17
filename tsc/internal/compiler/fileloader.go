@@ -420,7 +420,9 @@ func (p *fileLoader) parseSourceFile(t *parseTask) *ast.SourceFile {
 		PathKey:                        t.path,
 		ExternalModuleIndicatorOptions: ast.GetExternalModuleIndicatorOptions(t.normalizedFilePath, options, t.metadata),
 	}
-	if t.normalizedFilePath.ExtensionIsOneOf(p.contentMapperExtensions) {
+	// Spike for #65313: a mapper can register a built-in extension such as .ts, but declaration files
+	// are always parsed natively.
+	if t.normalizedFilePath.ExtensionIsOneOf(p.contentMapperExtensions) && !tspath.IsDeclarationFileName(t.normalizedFilePath.AsString()) {
 		return p.parseContentMappedFile(parseOptions)
 	}
 	return p.host.GetSourceFile(parseOptions)
